@@ -138,11 +138,16 @@ class Exerb::Recipe
       filepath = File.expand_path(entry.file, @basedir)
       raise("#{@filename}: no such file -- #{entry.file}") unless File.exist?(filepath)
     else
-      filepath = search_path.collect { |dir|
-        File.join(dir, internal_name)
-      }.find { |path|
-        File.exist?(path)
-      }
+      if File.exist?(internal_name) and internal_name.include? File::SEPARATOR
+        filepath = internal_name
+        internal_name = internal_name.sub(@basedir+File::SEPARATOR, '')
+      else
+        filepath = search_path.collect { |dir|
+          File.join(dir, internal_name)
+        }.find { |path|
+          File.exist?(path)
+        }
+      end
       raise("#{@filename}: no such file -- #{internal_name}") unless filepath
     end
 

@@ -5,13 +5,19 @@ Build standalone executables using Ruby.
 This repository containsthe conversion of original [exerb](http://exerb.sourceforge.jp/index.en.html) code
 into pure-C one that works better against MinGW compilers.
 
-## Maintainer needed
+## Usage
++ Navigate to a ruby file and execute the `mkexy` command
+  `mkexy source.rb`
++ Edit the newly generated file "source.exy" to check the file bindings. You can also change the options under the "general" section.
++ Execute `exerb --verbose source.exy`. It will generate the file "source.exe".
 
-As January 1st, 2015, this project has become unmaintained:
+## Ruby gems bindings
+If you load rubygems and relative files and have problems with the generated executable not finding the relative files,
+add the following lines to your source file **before** the `require`:
 
-https://groups.google.com/d/topic/rubyinstaller/nzpIDZqXO-Q/discussion
-
-If you want to take over maintenance of this project, please [open an issue](https://github.com/luislavena/exerb-mingw/issues) stating your intention and
-we can coordinate the entire process there.
-
-Thank you.
+```
+# Avoids errors when requiring relative files and working dir is different 
+$LOAD_PATH.unshift(File.dirname(__FILE__)) unless defined? Exerb
+# In execution adds current path to allow loading relative files
+$LOAD_PATH << '.' if defined? $Exerb || defined? Exerb
+```
